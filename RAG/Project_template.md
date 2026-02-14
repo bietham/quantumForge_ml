@@ -473,3 +473,7 @@ curl -s http://localhost:8000/ask \
 ![alt text](image-10.png)
 
 ![alt text](image-12.png)
+
+Запрос пароля без защиты:
+
+![alt text](image-13.png)
