@@ -1,0 +1,42 @@
+services:
+
+  indexer:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    working_dir: /app
+    volumes:
+      - ./knowledge_base:/app/knowledge_base:rw
+      - ./artifacts:/app/artifacts
+      - hf_cache:/root/.cache/huggingface
+    command: >
+      python index/build_index.py
+      --kb knowledge_base/kb_corpus.jsonl
+      --out artifacts/faiss_store
+      --model sentence-transformers/all-mpnet-base-v2
+      --chunk-size 1600
+      --overlap 250
+      --batch-size 64
+
+  bot:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    working_dir: /app
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+      - RAG_STORE_DIR=artifacts/faiss_store
+      - EMBED_MODEL=sentence-transformers/all-mpnet-base-v2
+      - TOP_K=6
+      - SCORE_THRESHOLD=0.22
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+      - hf_cache:/root/.cache/huggingface
+    ports:
+      - "8000:8000"
+    depends_on:
+      - indexer
+
+volumes:
+  hf_cache:

@@ -1,0 +1,18 @@
+{
+  "kb": "knowledge_base/kb_corpus.jsonl",
+  "model": "sentence-transformers/all-mpnet-base-v2",
+  "embedding_dim": 768,
+  "chunk_size_chars": 1600,
+  "overlap_chars": 250,
+  "batch_size": 64,
+  "docs_in_kb": 33,
+  "chunks_total": 641,
+  "created_at_utc": "2026-02-14T16:41:28Z",
+  "timing_sec": {
+    "load_kb": 0.003,
+    "chunking": 0.027,
+    "embeddings": 146.6,
+    "faiss_index": 0.002,
+    "total": 146.645
+  }
+}
